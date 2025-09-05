@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dap.sequence.server.entity.SeqDesignPo">
+
+    <resultMap type="com.dap.sequence.server.entity.SeqDesignPo" id="SeqDesignMap">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="updateUserId" column="update_user_id" jdbcType="VARCHAR"/>
+        <result property="createUserId" column="create_user_id" jdbcType="VARCHAR"/>
+        <result property="updateDate" column="update_date" jdbcType="TIMESTAMP"/>
+        <result property="createDate" column="create_date" jdbcType="TIMESTAMP"/>
+        <result property="tenantId" column="tenant_id" jdbcType="VARCHAR"/>
+
+        <result property="sequenceName" column="seq_name" jdbcType="VARCHAR"/>
+        <result property="sequenceCode" column="seq_code" jdbcType="VARCHAR"/>
+        <result property="sequenceApplicationId" column="seq_application_id" jdbcType="VARCHAR"/>
+        <result property="sequenceDesc" column="seq_desc" jdbcType="VARCHAR"/>
+        <result property="sequenceApplicationName" column="seq_application_name" jdbcType="VARCHAR"/>
+        <result property="sequenceNumber" column="seq_number" />
+        <result property="sequenceStatus" column="seq_status" jdbcType="VARCHAR"/>
+        <result property="callbackMode" column="callback_mode" jdbcType="VARCHAR"/>
+        <result property="onlineTime" column="online_time" jdbcType="TIMESTAMP"/>
+        <result property="offlineTime" column="offline_time" jdbcType="TIMESTAMP"/>
+        <result property="appCode" column="seq_application_code" jdbcType="VARCHAR"/>
+        <result property="accessKey" column="access_key" jdbcType="VARCHAR"/>
+        <result property="onlineOrOfflineAlarm" column="online_or_offline_alarm" jdbcType="TIMESTAMP"/>
+        <result property="callbackAlarm" column="callback_alarm" jdbcType="VARCHAR"/>
+        <result property="callbackAlarmThreshold" column="callback_alarm_threshold" jdbcType="VARCHAR"/>
+
+    </resultMap>
+
+    <sql id="Base_Column">
+       id,seq_name,seq_code,seq_application_id,seq_application_name,seq_desc,seq_number,seq_status,tenant_id,create_user_id,update_user_id,create_date,
+        update_date,callback_mode,online_time,offline_time,seq_application_code,access_key,online_or_offline_alarm,callback_alarm,callback_alarm_threshold
+    </sql>
+
+
+    <select id="queryList" resultMap="SeqDesignMap">
+        SELECT
+        <include refid="Base_Column"/>
+        FROM seq_design
+        <where>
+            <if test="id != null and id != ''">
+               and id = #{id}
+            </if>
+            <if test="sequenceStatus != null and sequenceStatus != ''">
+               and seq_status =#{sequenceStatus}
+            </if>
+            <if test="sequenceCode != null and sequenceCode != ''">
+              and  seq_code = #{sequenceCode}
+            </if>
+            <if test="callbackMode != null and callbackMode != ''">
+              and  callback_mode = #{callbackMode}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="queryPage" parameterType="com.dap.sequence.server.entity.SeqDesignPo" resultMap="SeqDesignMap">
+        SELECT
+        <include refid="Base_Column"/>
+        FROM seq_design
+        <where>
+            <if test="sequenceName != null and sequenceName != ''">
+                AND seq_name like CONCAT(CONCAT('%', #{sequenceName}),'%')
+            </if>
+            <if test="sequenceApplicationName != null and sequenceApplicationName != ''">
+                AND seq_application_name like CONCAT(CONCAT('%', #{sequenceApplicationName}),'%')
+            </if>
+            <if test="callbackMode != null and callbackMode != ''">
+                and  callback_mode = #{callbackMode}
+            </if>
+        </where>
+    </select>
+
+    <!--新增-->
+    <insert id="saveObject" parameterType="com.dap.sequence.server.entity.SeqDesignPo">
+        INSERT INTO seq_design (<include refid="Base_Column"/>)
+        VALUES (#{id}, #{sequenceName}, #{sequenceCode}, #{sequenceApplicationId}, #{sequenceApplicationName},#{sequenceDesc}, #{sequenceNumber},#{sequenceStatus}, #{tenantId},
+        #{createUserId},#{updateUserId},#{createDate},#{updateDate},#{callbackMode},#{onlineTime},#{offlineTime},#{appCode},#{accessKey},#{onlineOrOfflineAlarm},#{callbackAlarm},#{callbackAlarmThreshold})
+    </insert>
+
+
+    <!--通过主键修改数据-->
+    <update id="updateObject" parameterType="com.dap.sequence.server.entity.SeqDesignPo">
+        UPDATE seq_design
+        <set>
+            <if test="sequenceName != null and sequenceName != ''">
+                seq_name = #{sequenceName},
+            </if>
+            <if test="sequenceCode != null and sequenceCode != ''">
+                seq_code = #{sequenceCode},
+            </if>
+            <if test="sequenceApplicationId != null and sequenceApplicationId != ''">
+                seq_application_id = #{sequenceApplicationId},
+            </if>
+            <if test="sequenceApplicationName != null and sequenceApplicationName != ''">
+                seq_application_name = #{sequenceApplicationName},
+            </if>
+            <if test="sequenceDesc != null and sequenceDesc != '' ">
+                seq_desc = #{sequenceDesc},
+            </if>
+            <if test="sequenceNumber != null and sequenceNumber != ''">
+                seq_number = #{sequenceNumber},
+            </if>
+            <if test="sequenceStatus != null and sequenceStatus != ''">
+                seq_status = #{sequenceStatus},
+            </if>
+            <if test="tenantId != null and tenantId != '' ">
+                tenant_id = #{tenantId},
+            </if>
+            <if test="updateUserId != null and updateUserId != ''">
+                update_user_id = #{updateUserId},
+            </if>
+            <if test="createUserId != null and createUserId != ''">
+                create_user_id = #{createUserId},
+            </if>
+            <if test="createDate != null ">
+                create_date = #{createDate},
+            </if>
+            <if test="updateDate != null ">
+                update_date = #{updateDate},
+            </if>
+            <if test="callbackMode != null and callbackMode != ''">
+                callback_mode = #{callbackMode},
+            </if>
+            <if test="accessKey != null and accessKey != ''">
+                access_key = #{accessKey},
+            </if>
+            <if test="appCode != null and appCode != ''">
+                seq_application_code = #{appCode},
+            </if>
+            <if test="onlineTime != null">
+                online_time = #{onlineTime},
+            </if>
+            <if test="offlineTime != null">
+                offline_time = #{offlineTime},
+            </if>
+            <if test="onlineOrOfflineAlarm != null and onlineOrOfflineAlarm != ''">
+                online_or_offline_alarm = #{onlineOrOfflineAlarm},
+            </if>
+            <if test="callbackAlarm != null and callbackAlarm != ''">
+                callback_alarm = #{callbackAlarm},
+            </if>
+            <if test="callbackAlarmThreshold != null and callbackAlarmThreshold != ''">
+                callback_alarm_threshold = #{callbackAlarmThreshold},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+
+    <!--通过主键删除-->
+    <delete id="delObjectById">
+        delete
+        from seq_design
+        where id = #{id}
+    </delete>
+
+
+    <!-- 批量删除  -->
+    <delete id="delObjectByIds" parameterType="java.util.List">
+        delete from seq_design where id in
+        <foreach collection="list" item="id" open="(" close=")" separator="," index="">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--查询单个-->
+    <select id="getObjectById" resultMap="SeqDesignMap">
+        SELECT
+        <include refid="Base_Column"/>
+        FROM seq_design
+        WHERE id = #{id}
+    </select>
+
+    <!--查询单个-->
+    <select id="selectForUpdateBySeqCodeTenantTd" resultMap="SeqDesignMap">
+        SELECT
+        <include refid="Base_Column"/>
+        FROM seq_design
+        WHERE seq_code = #{sequenceCode} and tenant_id = #{tenantId}
+        for update
+    </select>
+
+    <!--通过编号 查询-->
+    <select id="getObjectByCode" resultMap="SeqDesignMap" parameterType="com.dap.sequence.server.entity.SeqDesignPo">
+        SELECT
+        <include refid="Base_Column"/>
+        FROM seq_design
+        WHERE seq_code = #{seqCode}
+        AND  seq_status =#{sequenceStatus}
+    </select>
+
+    <select id="getObjectByMap" parameterType="java.util.Map" resultMap="SeqDesignMap">
+        SELECT <include refid="Base_Column"/>
+        FROM seq_design
+        where tenant_id = #{tenantId}
+        AND seq_code = #{seqCode}
+    </select>
+
+    <select id="checkAccessKey" parameterType="java.util.HashMap" resultType="int">
+        select count(1) from seq_design
+        where seq_application_code = #{appCode} and access_key = #{accessKey}
+    </select>
+
+</mapper>

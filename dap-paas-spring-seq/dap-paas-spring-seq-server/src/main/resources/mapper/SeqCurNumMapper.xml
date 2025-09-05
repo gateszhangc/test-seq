@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dap.sequence.server.entity.SeqCurNum">
+
+    <resultMap type="com.dap.sequence.server.entity.SeqCurNum" id="SeqUseConditionMap">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="updateDate" column="update_date" jdbcType="TIMESTAMP"/>
+        <result property="createDate" column="create_date" jdbcType="TIMESTAMP"/>
+        <result property="tenantId" column="tenant_id" jdbcType="VARCHAR"/>
+
+        <result property="seqInstanceRuleId" column="instance_rule_id" jdbcType="VARCHAR"/>
+        <result property="inDay" column="in_day" jdbcType="VARCHAR"/>
+        <result property="seqLock" column="seq_lock" />
+        <result property="curVal" column="cur_val" jdbcType="VARCHAR"/>
+        <result property="instanceRuleName" column="instance_rule_name" jdbcType="VARCHAR"/>
+
+    </resultMap>
+
+    <sql id="Base_Column">
+      id,instance_rule_id,in_day,seq_lock,cur_val,tenant_id,create_date,update_date
+    </sql>
+
+    <select id="queryPage" parameterType="com.dap.sequence.server.entity.SeqCurNum"
+            resultMap="SeqUseConditionMap">
+        SELECT
+        a.id,a.instance_rule_id,a.in_day,seq_lock,a.cur_val,a.tenant_id,a.create_date,a.update_date,b.instance_rule_name
+        FROM seq_cur_num_day a LEFT JOIN seq_instance_rule b on a.instance_rule_id = b.id
+        <where>
+            <if test="id != null and id != ''">
+                AND b.seq_design_id =#{id}
+            </if>
+            <if test="tenantId != null and tenantId != ''">
+                AND a.tenant_id =#{tenantId}
+            </if>
+
+        </where>
+    </select>
+
+
+    <!--通过主键修改数据-->
+    <update id="updateObject" parameterType="com.dap.sequence.server.entity.SeqCurNum">
+        UPDATE seq_cur_num_day
+        <set>
+            <if test="seqInstanceRuleId != null and seqInstanceRuleId != ''">
+                instance_rule_id = #{seqInstanceRuleId},
+            </if>
+            <if test="inDay != null and inDay != ''">
+                in_day = #{inDay},
+            </if>
+            <if test="seqLock != null and seqLock != ''">
+                seq_lock = #{seqLock},
+            </if>
+            <if test="curVal != null and curVal != ''">
+                cur_val = #{curVal},
+            </if>
+
+            <if test="tenantId != null and tenantId != '' ">
+                tenant_id = #{tenantId},
+            </if>
+            <if test="createDate != null ">
+                create_date = #{createDate},
+            </if>
+            <if test="updateDate != null ">
+                update_date = #{updateDate}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="queryList" resultMap="SeqUseConditionMap">
+        SELECT
+        a.id,a.instance_rule_id,a.in_day,seq_lock,a.cur_val,a.tenant_id,a.create_date,a.update_date,b.instance_rule_name
+        as instanceRuleName
+        FROM seq_cur_num_day a LEFT JOIN seq_instance_rule b on a.instance_rule_id = b.id
+        <where>
+            <if test="seqRuleType != null and seqRuleType != ''">
+                AND seq_rule_type =#{seqRuleType}
+            </if>
+        </where>
+    </select>
+
+
+    <!--新增-->
+    <insert id="saveObject" parameterType="com.dap.sequence.server.entity.SeqCurNum">
+        INSERT INTO seq_cur_num_day (<include refid="Base_Column"/>)
+        VALUES (#{id}, #{seqInstanceRuleId}, #{inDay}, #{seqLock}, #{curVal},
+        #{tenantId},#{createDate},#{updateDate})
+    </insert>
+
+
+    <!--查询单个-->
+    <select id="getObjectById" resultMap="SeqUseConditionMap" useCache="false">
+        SELECT
+        <include refid="Base_Column"/>
+        FROM seq_cur_num_day
+        WHERE id = #{id}
+    </select>
+
+    <!--查询单个-->
+    <select id="getObjectByCode" resultMap="SeqUseConditionMap" parameterType="com.dap.sequence.server.entity.SeqCurNum"
+            useCache="false">
+        SELECT
+        <include refid="Base_Column"/>
+        FROM seq_cur_num_day
+        WHERE instance_rule_id = #{seqInstanceRuleId}
+        AND in_day =#{inDay}
+    </select>
+
+
+</mapper>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dap.sequence.server.entity.SeqInstanceRule">
+
+    <resultMap type="com.dap.sequence.server.entity.SeqInstanceRule" id="SeqInstanceRuleMap">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="updateUserId" column="update_user_id" jdbcType="VARCHAR"/>
+        <result property="createUserId" column="create_user_id" jdbcType="VARCHAR"/>
+        <result property="updateDate" column="update_date" jdbcType="TIMESTAMP"/>
+        <result property="createDate" column="create_date" jdbcType="TIMESTAMP"/>
+        <result property="tenantId" column="tenant_id" jdbcType="VARCHAR"/>
+
+        <result property="seqDesignId" column="seq_design_id" jdbcType="VARCHAR"/>
+        <result property="instanceRuleName" column="instance_rule_name" jdbcType="VARCHAR"/>
+        <result property="instanceRuleType" column="instance_rule_type" jdbcType="VARCHAR"/>
+        <result property="instanceRuleInfo" column="instance_rule_info" jdbcType="VARCHAR"/>
+        <result property="sortNo" column="sort_no" jdbcType="INTEGER"/>
+    </resultMap>
+
+
+    <sql id="Base_Column">
+      id,seq_design_id,instance_rule_name,instance_rule_type,instance_rule_info,sort_no,tenant_id,create_user_id,update_user_id,create_date,update_date
+    </sql>
+
+    <select id="queryPage" parameterType="com.dap.sequence.server.entity.SeqInstanceRule"
+            resultMap="SeqInstanceRuleMap">
+        SELECT
+        <include refid="Base_Column"/>
+        FROM seq_instance_rule
+        <where>
+            <if test="seqDesignId != null and seqDesignId != ''">
+                AND seq_design_id =#{seqDesignId}
+            </if>
+            <if test="instanceRuleName != null and instanceRuleName != ''">
+                AND instance_rule_name like CONCAT(CONCAT('%', #{instanceRuleName}),'%')
+            </if>
+        </where>
+        ORDER BY sort_no asc
+    </select>
+
+    <!--新增-->
+    <insert id="saveObject" parameterType="com.dap.sequence.server.entity.SeqInstanceRule">
+        INSERT INTO seq_instance_rule (<include refid="Base_Column"/>)
+        VALUES (#{id}, #{seqDesignId}, #{instanceRuleName}, #{instanceRuleType}, #{instanceRuleInfo}, #{sortNo},
+        #{tenantId}, #{createUserId},#{updateUserId},#{createDate}, #{updateDate})
+    </insert>
+
+    <select id="queryList" resultMap="SeqInstanceRuleMap">
+        SELECT
+        <include refid="Base_Column"/>
+        FROM seq_instance_rule
+        <where>
+            <if test="seqDesignId != null and seqDesignId != ''">
+                AND seq_design_id =#{seqDesignId}
+            </if>
+            <if test="instanceRuleType != null and instanceRuleType != ''">
+                AND instance_rule_type =#{instanceRuleType}
+            </if>
+        </where>
+        ORDER BY sort_no asc
+    </select>
+
+
+    <select id="InstanceRuleList" parameterType="com.dap.sequence.server.entity.SeqInstanceRule"
+            resultMap="SeqInstanceRuleMap">
+        SELECT  instance_rule_name from seq_instance_rule
+         WHERE  seq_design_id = #{seqDesignId}
+    </select>
+
+
+    <!--通过主键修改数据-->
+    <update id="updateObject" parameterType="com.dap.sequence.server.entity.SeqInstanceRule">
+        UPDATE seq_instance_rule
+        <set>
+            <if test="seqDesignId != null and seqDesignId != ''">
+                seq_design_id = #{seqDesignId},
+            </if>
+            <if test="instanceRuleName != null and instanceRuleName != ''">
+                instance_rule_name = #{instanceRuleName},
+            </if>
+            <if test="instanceRuleType != null and instanceRuleType != ''">
+                instance_rule_type = #{instanceRuleType},
+            </if>
+            <if test="instanceRuleInfo != null and instanceRuleInfo != ''">
+                instance_rule_info = #{instanceRuleInfo},
+            </if>
+            <if test="sortNo != null and sortNo != '' ">
+                sort_no = #{sortNo},
+            </if>
+            <if test="tenantId != null and tenantId != '' ">
+                tenant_id = #{tenantId},
+            </if>
+            <if test="updateUserId != null and updateUserId != ''">
+                update_user_id = #{updateUserId},
+            </if>
+            <if test="createUserId != null and createUserId != ''">
+                create_user_id = #{createUserId},
+            </if>
+            <if test="createDate != null ">
+                create_date = #{createDate},
+            </if>
+            <if test="updateDate != null ">
+                update_date = #{updateDate}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+
+    <!--通过主键删除-->
+    <delete id="delObjectById">
+        delete
+        from seq_instance_rule
+        where id = #{id}
+    </delete>
+
+</mapper>

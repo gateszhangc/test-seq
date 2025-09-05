@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dap.sequence.server.entity.SeqUseCondition">
+
+    <resultMap type="com.dap.sequence.server.entity.SeqUseCondition" id="SeqUseCondition">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="updateUserId" column="update_user_id" jdbcType="VARCHAR"/>
+        <result property="createUserId" column="create_user_id" jdbcType="VARCHAR"/>
+        <result property="updateDate" column="update_date" jdbcType="TIMESTAMP"/>
+        <result property="createDate" column="create_date" jdbcType="TIMESTAMP"/>
+        <result property="tenantId" column="tenant_id" jdbcType="VARCHAR"/>
+
+        <result property="designId" column="design_id" jdbcType="VARCHAR"/>
+        <result property="serverInfo" column="server_info" jdbcType="VARCHAR"/>
+        <result property="clientInfo" column="client_info" />
+        <result property="numberStart" column="number_start" jdbcType="VARCHAR"/>
+        <result property="numberEnd" column="number_end" jdbcType="VARCHAR"/>
+        <result property="seqNo" column="seq_no" jdbcType="VARCHAR"/>
+        <result property="seqName" column="seq_name" jdbcType="VARCHAR"/>
+
+    </resultMap>
+
+    <sql id="Base_Column">
+      id,design_id,server_info,client_info,number_start,number_end,seq_no,seq_name,tenant_id,create_date,update_date,update_user_id,create_user_id
+    </sql>
+
+
+
+    <!--新增-->
+    <insert id="saveObject" parameterType="com.dap.sequence.server.entity.SeqCurNum">
+        INSERT INTO seq_use_condition (<include refid="Base_Column"/>)
+        VALUES (#{id}, #{designId}, #{serverInfo}, #{clientInfo}, #{numberStart},#{numberEnd},#{seqNo},#{seqName},
+        #{tenantId},#{createDate},#{updateDate},#{updateUserId},#{updateUserId})
+    </insert>
+
+
+
+
+
+</mapper>

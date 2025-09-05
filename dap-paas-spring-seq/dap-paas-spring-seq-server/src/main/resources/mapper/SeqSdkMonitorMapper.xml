@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dap.sequence.server.entity.SeqSdkMonitor">
+
+    <resultMap type="com.dap.sequence.server.entity.SeqSdkMonitor" id="SeqSdkMonitor">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="updateUserId" column="update_user_id" jdbcType="VARCHAR"/>
+        <result property="createUserId" column="create_user_id" jdbcType="VARCHAR"/>
+        <result property="updateDate" column="update_date" jdbcType="TIMESTAMP"/>
+        <result property="createDate" column="create_date" jdbcType="TIMESTAMP"/>
+        <result property="tenantId" column="tenant_id" jdbcType="VARCHAR"/>
+
+        <result property="serviceName" column="service_name" jdbcType="VARCHAR"/>
+        <result property="serviceId" column="service_id" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="VARCHAR"/>
+        <result property="hostIp" column="host_ip" jdbcType="VARCHAR"/>
+        <result property="port" column="port" jdbcType="VARCHAR"/>
+        <result property="sdkName" column="sdk_name" jdbcType="VARCHAR"/>
+        <result property="contextPath" column="context_path" jdbcType="VARCHAR"/>
+        <result property="instanceName" column="instance_name" jdbcType="VARCHAR"/>
+        <result property="version" column="version" jdbcType="INTEGER"/>
+        <result property="workId" column="work_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+
+    <sql id="Base_Column">
+      id,service_name,service_id,status,host_ip,port,sdk_name,tenant_id,create_date,update_date,update_user_id,create_user_id,context_path,instance_name,version,work_id
+    </sql>
+
+    <select id="queryList" parameterType="java.util.HashMap"
+            resultMap="SeqSdkMonitor">
+        SELECT
+        <include refid="Base_Column"/>
+        FROM seq_sdk_monitor
+        <where>
+            <if test="sdkName != null and sdkName != ''">
+                and  sdk_name = #{sdkName}
+            </if>
+            <if test="serviceName != null and serviceName != ''">
+                and  service_name = #{serviceName}
+            </if>
+            <if test="hostIp != null and hostIp != ''">
+                and  host_ip = #{hostIp}
+            </if>
+            <if test="port != null and port != ''">
+                and  port = #{port}
+            </if>
+            <if test="instanceName != null and instanceName != ''">
+                and  instance_name = #{instanceName}
+            </if>
+            <if test="workId != null">
+                and work_id = #{workId}
+            </if>
+
+            <if test="status != null and status != ''">
+                and status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <!--新增-->
+    <insert id="saveObject" parameterType="com.dap.sequence.server.entity.SeqSdkMonitor">
+        INSERT INTO seq_sdk_monitor (<include refid="Base_Column"/>)
+        VALUES (#{id}, #{serviceName}, #{serviceId}, #{status}, #{hostIp},#{port},#{sdkName},
+        #{tenantId},#{createDate},#{updateDate},#{updateUserId},#{updateUserId},#{contextPath},
+        #{instanceName},#{version},#{workId})
+    </insert>
+
+    <!--编辑-->
+    <update id="updateObject" parameterType="com.dap.sequence.server.entity.SeqSdkMonitor">
+        UPDATE  seq_sdk_monitor
+        <set>
+            <if test="serviceName != null and serviceName != ''">
+                service_name = #{serviceName},
+            </if>
+            <if test="hostIp != null and hostIp != ''">
+                host_ip = #{hostIp},
+            </if>
+            <if test="port != null and port != ''">
+                port = #{port},
+            </if>
+            <if test="instanceName != null and instanceName != ''">
+                instance_name = #{instanceName},
+            </if>
+            <if test="status != null and status != ''">
+                status = #{status},
+            </if>
+            <if test="serviceId != null and serviceId != ''">
+                service_id = #{serviceId},
+            </if>
+            <if test="updateUserId != null and updateUserId != ''">
+                update_user_id = #{updateUserId},
+            </if>
+            <if test="contextPath != null and contextPath != ''">
+                context_path = #{contextPath},
+            </if>
+            <if test="sdkName != null and sdkName != ''">
+                sdk_name = #{sdkName},
+            </if>
+            <if test="version != null">
+                version = #{version} + 1,
+            </if>
+            <if test="updateDate != null ">
+                update_date = #{updateDate}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateAllInfoWithVersion" parameterType="com.dap.sequence.server.entity.SeqSdkMonitor">
+        UPDATE  seq_sdk_monitor
+        <set>
+        <if test="serviceName != null and serviceName != ''">
+            service_name = #{serviceName},
+        </if>
+        <if test="hostIp != null and hostIp != ''">
+            host_ip = #{hostIp},
+        </if>
+        <if test="port != null and port != ''">
+            port = #{port},
+        </if>
+        <if test="instanceName != null and instanceName != ''">
+            instance_name = #{instanceName},
+        </if>
+        <if test="status != null and status != ''">
+            status = #{status},
+        </if>
+        <if test="serviceId != null and serviceId != ''">
+            service_id = #{serviceId},
+        </if>
+        <if test="tenantId != null and tenantId != ''">
+            tenant_id = #{tenantId},
+        </if>
+        <if test="updateUserId != null and updateUserId != ''">
+            update_user_id = #{updateUserId},
+        </if>
+        <if test="contextPath != null and contextPath != ''">
+            context_path = #{contextPath},
+        </if>
+        <if test="sdkName != null and sdkName != ''">
+            sdk_name = #{sdkName},
+        </if>
+        <if test="version != null">
+            version = #{version} + 1,
+        </if>
+        <if test="updateDate != null ">
+            update_date = #{updateDate}
+        </if>
+        </set>
+        WHERE id = #{id}
+        <if test="version != null">
+        AND version = #{version}
+        </if>
+    </update>
+
+    <select id="queryClusterForRcv" parameterType="java.util.HashMap" resultType="com.dap.sequence.api.dto.SnowflakeRcvCluster">
+        SELECT
+            sdk_name AS sdkName,
+            total_count AS totalCount
+        FROM
+            ( SELECT sdk_name, COUNT(1) total_count
+              FROM seq_sdk_monitor
+              GROUP BY sdk_name
+              HAVING COUNT(1) > #{rcvMaxCnt} ) v
+    </select>
+
+    <select id="queryMaxWorkId" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT MAX(work_id) FROM seq_sdk_monitor
+        WHERE sdk_name = #{sdkName}
+    </select>
+
+    <update id="updateStatus" parameterType="java.util.Map">
+        UPDATE  seq_sdk_monitor
+        set status = #{status},
+            update_date = #{updateDate}
+        <where>
+            <if test="oldStatus != null and oldStatus != ''">
+                AND status = #{oldStatus}
+            </if>
+            <if test="rcvDate != null">
+                AND update_date &lt; #{rcvDate}
+            </if>
+
+            <if test="sdkName != null and sdkName != ''">
+                AND sdk_name = #{sdkName}
+            </if>
+            <if test="instanceName != null and instanceName != ''">
+                AND instance_name = #{instanceName}
+            </if>
+        </where>
+    </update>
+</mapper>

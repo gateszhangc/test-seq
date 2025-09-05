@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dap.sequence.server.entity.SeqServiceNode">
+    <resultMap id="SeqSserviceNode" type="com.dap.sequence.server.entity.SeqServiceNode">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result column="port" property="port"/>
+        <result column="host_ip" property="hostIp"/>
+        <result column="status" property="status"/>
+        <result column="machine_id" property="machineId"/>
+        <result column="deploy_path" property="deployPath"/>
+        <result column="cluster_id" property="clusterId"/>
+        <result property="updateUserId" column="update_user_id" jdbcType="VARCHAR"/>
+        <result property="createUserId" column="create_user_id" jdbcType="VARCHAR"/>
+        <result property="updateDate" column="update_date" jdbcType="TIMESTAMP"/>
+        <result property="createDate" column="create_date" jdbcType="TIMESTAMP"/>
+        <result property="tenantId" column="tenant_id" jdbcType="VARCHAR"/>
+        <result column="config_path" property="configPath"/>
+        <result column="logfile_path" property="logfilePath"/>
+
+    </resultMap>
+
+    <sql id="Table_Name">
+        seq_service_node
+    </sql>
+
+    <sql id="Base_Column">
+        id,host_ip,port,status, machine_id, deploy_path,cluster_id,
+        create_user_id, create_date,update_user_id,update_date,tenant_id,config_path,logfile_path
+    </sql>
+    <!--查询单个-->
+    <select id="getObjectById" parameterType="java.lang.String" resultMap="SeqSserviceNode">
+        SELECT
+        <include refid="Base_Column"/>
+        FROM seq_service_node
+        WHERE id = #{id}
+    </select>
+    <!--查询单个-->
+    <select id="getObjectByClusterName" parameterType="java.lang.String" resultMap="SeqSserviceNode">
+        SELECT id,name,status,tenant_id
+        FROM seq_service_cluster
+        WHERE name = #{name}
+    </select>
+    <!--根据对象的某个属性查询数据列表-->
+    <select id="queryList" parameterType="com.dap.sequence.server.entity.SeqServiceNode" resultMap="SeqSserviceNode">
+        SELECT
+        n.host_ip,n.port
+        FROM seq_service_node n LEFT JOIN seq_service_cluster c ON n.cluster_id =c.id
+        where  c.status ='1' and n.status ='1'
+            <if test="name != null and name != ''">
+                AND c.name = #{name}
+            </if>
+            <if test="clusterId != null and clusterId != ''">
+                AND cluster_id = #{clusterId}
+            </if>
+    </select>
+    <!--根据map查询单个-->
+    <select id="getObjectByMap" parameterType="java.util.Map" resultMap="SeqSserviceNode">
+        SELECT <include refid="Base_Column"/>
+        FROM seq_service_node
+        <where>
+            <if test="clusterId != null and clusterId != ''">
+                AND cluster_id = #{clusterId}
+            </if>
+            <if test="machineId != null and machineId != ''">
+                AND machine_id = #{machineId}
+            </if>
+            <if test="hostIp != null and hostIp != ''">
+                AND host_ip = #{hostIp}
+            </if>
+            <if test="port != null and port != ''">
+                AND port = #{port}
+            </if>
+        </where>
+    </select>
+    <!--通过主键修改数据-->
+    <update id="updateObject" parameterType="com.dap.sequence.server.entity.SeqServiceNode">
+        UPDATE seq_service_node
+        <set>
+            <if test="updateDate != null ">
+                update_date = #{updateDate},
+            </if>
+            <if test="status != null and status != ''">
+                status = #{status},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+</mapper>

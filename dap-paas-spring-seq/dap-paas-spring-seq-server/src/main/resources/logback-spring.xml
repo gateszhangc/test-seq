@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+
+    <property name="log.pattern"
+              value="%d{yyyy-MM-dd HH:mm:ss:SSS} %-5level %thread %logger{40}.%method - %line - %msg%n"/>
+
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="engine-log-appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/dap-seq-server.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${log.path}/dap-seq-server.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>20GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="transition-log-appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/transition-flow.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${log.path}/transition-flow.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>10GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="org.springframework.boot.autoconfigure" level="error"/>
+    <logger name="org.springframework.aop.framework.CglibAopProxy" level="warn"/>
+    <logger name="com.dap.sequence.server" level="info"/>
+
+    <root level="INFO">
+        <appender-ref ref="engine-log-appender"/>
+        <appender-ref ref="console"/>
+    </root>
+
+</configuration>

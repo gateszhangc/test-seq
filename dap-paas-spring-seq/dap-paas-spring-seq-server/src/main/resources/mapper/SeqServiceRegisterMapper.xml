@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dap.sequence.server.entity.SeqServiceRegister">
+    <resultMap id="seqServiceRegister" type="com.dap.sequence.server.entity.SeqServiceRegister">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result column="port" property="port"/>
+        <result column="host_ip" property="hostIp"/>
+        <result property="updateDate" column="update_date" jdbcType="TIMESTAMP"/>
+        <result property="createDate" column="create_date" jdbcType="TIMESTAMP"/>
+        <result column="application_name" property="applicationName"/>
+    </resultMap>
+
+    <sql id="Table_Name">
+        seq_service_register
+    </sql>
+
+    <sql id="Base_Column">
+        id,host_ip,port, create_date,update_date,application_name
+    </sql>
+    <!--查询单个-->
+    <select id="getObjectById" parameterType="java.lang.String" resultMap="seqServiceRegister">
+        SELECT
+        <include refid="Base_Column"/>
+        FROM seq_service_register
+       where id = #{id}
+    </select>
+    <!--根据对象的某个属性查询数据列表-->
+    <select id="queryList" parameterType="com.dap.sequence.server.entity.SeqServiceRegister" resultMap="seqServiceRegister">
+        SELECT
+        <include refid="Base_Column"/>
+        FROM seq_service_register
+        <where>
+            <if test="hostIp != null and hostIp != ''">
+                AND host_ip = #{hostIp}
+            </if>
+            <if test="port != null and port != ''">
+                AND port = #{port}
+            </if>
+        </where>
+    </select>
+
+    <!--通过主键修改数据-->
+    <update id="updateObject" parameterType="com.dap.sequence.server.entity.SeqServiceRegister">
+        UPDATE seq_service_register
+        <set>
+            <if test="updateDate != null ">
+                update_date = #{updateDate},
+            </if>
+        </set>
+        <where>
+            <if test="hostIp != null and hostIp != ''">
+                AND host_ip = #{hostIp}
+            </if>
+            <if test="port != null and port != ''">
+                AND port = #{port}
+            </if>
+            <if test="applicationName != null and applicationName != ''">
+                AND application_name = #{applicationName}
+            </if>
+        </where>
+    </update>
+   <!--新增所有列-->
+    <insert id="saveObject" parameterType="com.dap.sequence.server.entity.SeqServiceRegister">
+        INSERT INTO seq_service_register(<include refid="Base_Column"/>)
+        VALUES (#{id},#{hostIp},#{port},#{createDate},#{updateDate}, #{applicationName})
+    </insert>
+
+    <!--根据map查询单个-->
+    <select id="getObjectByMap" parameterType="java.util.Map" resultMap="seqServiceRegister">
+        SELECT <include refid="Base_Column"/>
+        FROM seq_service_register
+        <where>
+            <if test="hostIp != null and hostIp != ''">
+                AND host_ip = #{hostIp}
+            </if>
+            <if test="port != null and port != ''">
+                AND port = #{port}
+            </if>
+            <if test="applicationName != null and applicationName != ''">
+                AND application_name = #{applicationName}
+            </if>
+        </where>
+    </select>
+</mapper>
